@@ -33,5 +33,6 @@ else:
 extracted_data = [{'prdtm': item['prdtm'], 'rt': item['rt']} for item in data['bustime-response']['prd']]
 print('\n',extracted_data)
 
+# write extracted data to json file
 with open('extracted_api_response.json', 'w') as json_file:
     json.dump(extracted_data, json_file, indent=4)
