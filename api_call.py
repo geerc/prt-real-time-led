@@ -28,3 +28,10 @@ if response.status_code == 200:
 else:
     # Print an error message if the request failed
     print(f"Failed to retrieve data: {response.status_code}")
+
+# Extract route and pred arrival time
+extracted_data = [{'prdtm': item['prdtm'], 'rt': item['rt']} for item in data['bustime-response']['prd']]
+print('\n',extracted_data)
+
+with open('extracted_api_response.json', 'w') as json_file:
+    json.dump(extracted_data, json_file, indent=4)
