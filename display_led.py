@@ -1,4 +1,4 @@
-from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions
+from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
 # from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 import time
 
@@ -21,7 +21,7 @@ canvas = matrix.CreateFrameCanvas()
 
 # Load font
 font = graphics.Font()
-font.LoadFont("../../fonts/7x13.bdf")  # Adjust the path to the font file if needed
+font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matrix/fonts/7x13.bdf")  # Adjust the path to the font file if needed
 
 # Define the text
 text = "Hello, World!"
