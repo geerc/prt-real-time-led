@@ -46,9 +46,10 @@ print(formatted_output)
 canvas.Clear()
 
 # Draw the text
-graphics.DrawText(canvas, font, 1, 5, color, formatted_output[1])
-graphics.DrawText(canvas, font, 1, 11, color, formatted_output[2])
-graphics.DrawText(canvas, font, 1, 17, color, formatted_output[3])
+graphics.DrawText(canvas, font, 1, 5, color, formatted_output[0])
+graphics.DrawText(canvas, font, 1, 11, color, formatted_output[1])
+graphics.DrawText(canvas, font, 1, 17, color, formatted_output[2])
+graphics.DrawText(canvas, font, 1, 23, color, formatted_output[3])
 
 
 # Swap buffers to display the text
