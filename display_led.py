@@ -25,10 +25,13 @@ font = graphics.Font()
 font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")  # Adjust the path to the font file if needed
 
 # Define the text
-text = "Hello, World!"
+text = "Hello, World"
 with open('extracted_api_response.json') as f:
     data = json.load(f)
-    print(data)
+
+# Iterate through the list and print the formatted output
+for item in data:
+    print(f"{item['rt']} {item['prdtm']}")
 
 # Define the starting position
 text_position = (10, 20)  # (x, y) coordinates
