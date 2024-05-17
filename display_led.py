@@ -38,8 +38,10 @@ graphics.DrawText(canvas, font, text_position[0], text_position[1], color, text)
 # Swap buffers to display the text
 matrix.SwapOnVSync(canvas)
 
-# Keep the text displayed for a certain time (e.g., 10 seconds)
-time.sleep(10)
-
-# Optionally clear the matrix after displaying the text
-matrix.Clear()
+# Keep scirpt running until interupted or times out at 100 seconds
+try:
+    print("Press CTRL-C to stop.")
+    while True:
+        time.sleep(100)
+except KeyboardInterrupt:
+    sys.exit(0)
