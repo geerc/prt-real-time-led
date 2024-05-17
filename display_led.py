@@ -1,6 +1,7 @@
 from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
 # from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 import time
+import json
 
 # Configuration for the matrix
 options = RGBMatrixOptions()
@@ -25,6 +26,9 @@ font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matr
 
 # Define the text
 text = "Hello, World!"
+with open('extracted_data.json') as f:
+    data = json.load(f)
+    print(data)
 
 # Define the starting position
 text_position = (10, 20)  # (x, y) coordinates
