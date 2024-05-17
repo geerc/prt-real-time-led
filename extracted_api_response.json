@@ -1,18 +1,22 @@
 [
     {
-        "prdtm": "20240517 12:57",
-        "rt": "P3"
+        "prdtm": "20240517 12:59",
+        "rt": "P3",
+        "stpnm": "EAST BUSWAY + HOMEWOOD STATION C"
     },
     {
-        "prdtm": "20240517 12:57",
-        "rt": "P1"
+        "prdtm": "20240517 13:01",
+        "rt": "P1",
+        "stpnm": "EAST BUSWAY + HOMEWOOD STATION C"
     },
     {
-        "prdtm": "20240517 13:17",
-        "rt": "P68"
+        "prdtm": "20240517 13:16",
+        "rt": "P68",
+        "stpnm": "EAST BUSWAY + HOMEWOOD STATION C"
     },
     {
         "prdtm": "20240517 13:18",
-        "rt": "P1"
+        "rt": "P1",
+        "stpnm": "EAST BUSWAY + HOMEWOOD STATION C"
     }
 ]
