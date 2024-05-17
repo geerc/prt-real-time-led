@@ -31,13 +31,24 @@ with open('extracted_api_response.json') as f:
 
 # List to store the formatted output
 formatted_output = []
+stop_names = []
 
 # Iterate through the list and save the formatted output to the list
 for item in data:
     prdtm_last_5 = item['prdtm'][-5:]  # Get the last 5 characters of the 'prdtm' string
+    if  len(formatted_output) == 0:
+        stop_names.append(f"{item['stpnm']}")
+    elif formatted_output[-1] == item['stpnm']:
+        continue
+    else:
+        stop_names.append(f"{item['stpnm']}")
     formatted_output.append(f"{item['rt']} {prdtm_last_5}")
 
 print(formatted_output)
+print(stop_names)
+
+# Save stop name to variable
+
 
 # Define the starting position
 # text_position = (1, 5)  # (x, y) coordinates
@@ -46,10 +57,11 @@ print(formatted_output)
 canvas.Clear()
 
 # Draw the text
-graphics.DrawText(canvas, font, 1, 5, color, formatted_output[0])
-graphics.DrawText(canvas, font, 1, 11, color, formatted_output[1])
-graphics.DrawText(canvas, font, 1, 17, color, formatted_output[2])
-graphics.DrawText(canvas, font, 1, 23, color, formatted_output[3])
+graphics.DrawText(canvas, font, 1, 5, color, stop_names[0])
+graphics.DrawText(canvas, font, 1, 11, color, formatted_output[0])
+graphics.DrawText(canvas, font, 1, 17, color, formatted_output[1])
+graphics.DrawText(canvas, font, 1, 23, color, formatted_output[2])
+graphics.DrawText(canvas, font, 1, 29, color, formatted_output[3])
 
 
 # Swap buffers to display the text
