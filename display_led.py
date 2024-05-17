@@ -40,15 +40,15 @@ for item in data:
 print(formatted_output)
 
 # Define the starting position
-text_position = (1, 5)  # (x, y) coordinates
+# text_position = (1, 5)  # (x, y) coordinates
 
 # Clear the canvas
 canvas.Clear()
 
 # Draw the text
-graphics.DrawText(canvas, font, text_position[0], text_position[1], color, text)
-# graphics.DrawText(canvas, font, text_position[0], text_position[1], color, text)
-# graphics.DrawText(canvas, font, text_position[0], text_position[1], color, text)
+graphics.DrawText(canvas, font, 1, 5, color, formatted_output[1])
+graphics.DrawText(canvas, font, 1, 11, color, formatted_output[2])
+graphics.DrawText(canvas, font, 1, 17, color, formatted_output[3])
 
 
 # Swap buffers to display the text
