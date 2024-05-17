@@ -29,19 +29,27 @@ text = "Hello, World"
 with open('extracted_api_response.json') as f:
     data = json.load(f)
 
-# Iterate through the list and print the formatted output
+# List to store the formatted output
+formatted_output = []
+
+# Iterate through the list and save the formatted output to the list
 for item in data:
-    prdtm_last_5 = item['prdtm'][-5:]  # Get the last 5 characters (time) of the 'prdtm' string
-    print(f"{item['rt']} {prdtm_last_5}")
+    prdtm_last_5 = item['prdtm'][-5:]  # Get the last 5 characters of the 'prdtm' string
+    formatted_output.append(f"{item['rt']} {prdtm_last_5}")
+
+print(formatted_output)
 
 # Define the starting position
-text_position = (10, 20)  # (x, y) coordinates
+text_position = (1, 5)  # (x, y) coordinates
 
 # Clear the canvas
 canvas.Clear()
 
 # Draw the text
 graphics.DrawText(canvas, font, text_position[0], text_position[1], color, text)
+# graphics.DrawText(canvas, font, text_position[0], text_position[1], color, text)
+# graphics.DrawText(canvas, font, text_position[0], text_position[1], color, text)
+
 
 # Swap buffers to display the text
 matrix.SwapOnVSync(canvas)
