@@ -32,7 +32,7 @@ with open('extracted_api_response.json') as f:
 # Iterate through the list and print the formatted output
 for item in data:
     prdtm_last_5 = item['prdtm'][-5:]  # Get the last 5 characters (time) of the 'prdtm' string
-    print(f"{item['rt']} {'prdtm_last_5'}")
+    print(f"{item['rt']} {prdtm_last_5}")
 
 # Define the starting position
 text_position = (10, 20)  # (x, y) coordinates
