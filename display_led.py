@@ -26,7 +26,7 @@ font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matr
 
 # Define the text
 text = "Hello, World!"
-with open('extracted_data.json') as f:
+with open('extracted_api_response.json') as f:
     data = json.load(f)
     print(data)
 
