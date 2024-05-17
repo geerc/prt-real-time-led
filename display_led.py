@@ -21,7 +21,7 @@ canvas = matrix.CreateFrameCanvas()
 
 # Load font
 font = graphics.Font()
-font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matrix/fonts/7x13.bdf")  # Adjust the path to the font file if needed
+font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")  # Adjust the path to the font file if needed
 
 # Define the text
 text = "Hello, World!"
