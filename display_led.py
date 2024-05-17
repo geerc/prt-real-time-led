@@ -36,11 +36,12 @@ stop_names = []
 # Iterate through the list and save the formatted output to the list
 for item in data:
     prdtm_last_5 = item['prdtm'][-5:]  # Get the last 5 characters of the 'prdtm' string
-    if  len(formatted_output) == 0:
+    # get stop names and unique values to stop_names list
+    if  len(formatted_output) == 0: # check if list is empty, if so append first stop name
         stop_names.append(f"{item['stpnm']}")
-    elif formatted_output[-1] == item['stpnm']:
+    elif formatted_output[-1] == item['stpnm']: # check if stop name is already present
         continue
-    else:
+    else: # append unique stop name to non-empty stop_names list
         stop_names.append(f"{item['stpnm']}")
     formatted_output.append(f"{item['rt']} {prdtm_last_5}")
 
