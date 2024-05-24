@@ -8,7 +8,7 @@ url = 'http://realtime.portauthority.org/bustime/api/v3/getpredictions'
 # Define parameters
 params = {
     'key': '7Cjew3Pd88mihr5aDsA2R3yyF',
-    'stpid': 8154,
+    'stpid': '20014,8154',
     # 'rt': 'P1',
     'format': 'json',
     'rtpidatafeed':'Port Authority Bus'}
