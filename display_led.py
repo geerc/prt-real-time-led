@@ -25,7 +25,7 @@ font = graphics.Font()
 font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")  # Adjust the path to the font file if needed
 
 # Define the text
-text = "Hello, World"
+# text = "Hello, World"
 with open('extracted_api_response.json') as f:
     data = json.load(f)
 
@@ -57,13 +57,34 @@ print(stop_names)
 # Clear the canvas
 canvas.Clear()
 
-# Draw the text
-graphics.DrawText(canvas, font, 1, 5, color, stop_names[0])
-graphics.DrawText(canvas, font, 1, 11, color, formatted_output[0])
-graphics.DrawText(canvas, font, 1, 17, color, formatted_output[1])
-graphics.DrawText(canvas, font, 1, 23, color, formatted_output[2])
-graphics.DrawText(canvas, font, 1, 29, color, formatted_output[3])
+# Intitalize poition of the text
+pos = canvas.width
 
+# Animation loop
+while True:
+    # Clear the canvas
+    canvas.Clear()
+
+    # Draw the scrolling text at the current position
+    text_length = graphics.DrawText(canvas, font, pos, 5, color, stop_names[0])
+    # Draw the static text
+    graphics.DrawText(canvas, font, 1, 11, color, formatted_output[0])
+    graphics.DrawText(canvas, font, 1, 17, color, formatted_output[1])
+    graphics.DrawText(canvas, font, 1, 23, color, formatted_output[2])
+    graphics.DrawText(canvas, font, 1, 29, color, formatted_output[3])
+
+    # Move scrolling text to the left
+    pos -= 1
+
+    # Reset position if the text has moved completely off the left side
+    if pos + text_length < 0:
+        pos = canvas.width
+
+    # Swap the canvas to update the display
+    canvas = matrix.SwapOnVSync(canvas)
+
+    # Delay to control the speed of the scrolling
+    time.sleep(0.05)
 
 # Swap buffers to display the text
 matrix.SwapOnVSync(canvas)
