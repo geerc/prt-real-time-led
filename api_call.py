@@ -29,7 +29,7 @@ else:
     print(f"Failed to retrieve data: {response.status_code}")
 
 # Extract route and pred arrival time
-extracted_data = [{'prdtm': item['prdtm'], 'rt': item['rt'], 'stpnm':item['stpnm']} for item in data['bustime-response']['prd']]
+extracted_data = [{'prdtm': item['prdtm'], 'rt': item['rt'], 'stpnm':item['stpnm'], 'stpid':item['stpid']} for item in data['bustime-response']['prd']]
 print('\n',extracted_data)
 
 # write extracted data to json file
