@@ -29,28 +29,25 @@ font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matr
 with open('extracted_api_response.json') as f:
     data = json.load(f)
 
-# List to store the formatted output
-formatted_output = []
-stop_names = []
-
 # filter api response by stop id
-fifth_ave_data = [bus for bus in data if bus['stpid'] == 8154]
-
+homewood_data = [bus for bus in data if bus['stpid'] == '8154']
+fith_penn_data = [bus for bus in data if bus['stpid'] == '20014']
+print('Homewood data:  ', homewood_data[0]['stpnm'])
+# Lists to store the formatted output
+homewood_formatted = []
+fifth_penn_formatted = []
 
 # Iterate through the list and save the formatted output to the list
-for item in data:
+for item in homewood_data:
     prdtm_last_5 = item['prdtm'][-5:]  # Get the last 5 characters (time) of the 'prdtm' string
-    # get stop names and unique values to stop_names list
-    if  len(formatted_output) == 0: # check if list is empty, if so append first stop name
-        stop_names.append(f"{item['stpnm']}")
-    elif formatted_output[-1] == item['stpnm']: # check if stop name is already present
-        continue
-    else: # append unique stop name to non-empty stop_names list
-        stop_names.append(f"{item['stpnm']}")
-    formatted_output.append(f"{item['rt']} {prdtm_last_5}")
+    homewood_formatted.append(f"{item['rt']} {prdtm_last_5}")
 
-print(formatted_output)
-print(stop_names)
+for item in fith_penn_data:
+    prdtm_last_5 = item['prdtm'][-5:]  # Get the last 5 characters (time) of the 'prdtm' string
+    fifth_penn_formatted.append(f"{item['rt']} {prdtm_last_5}")
+
+print('Homewood output: ', homewood_formatted)
+print('Fifth output: ', fifth_penn_formatted)
 
 # Save stop name to variable
 
@@ -70,12 +67,11 @@ while True:
     canvas.Clear()
 
     # Draw the scrolling text at the current position
-    text_length = graphics.DrawText(canvas, font, pos, 5, color, stop_names[0])
+    text_length = graphics.DrawText(canvas, font, pos, 5, color, homewood_data[0]['stpnm'])
     # Draw the static text
-    graphics.DrawText(canvas, font, 1, 11, color, formatted_output[0])
-    graphics.DrawText(canvas, font, 1, 17, color, formatted_output[1])
-    graphics.DrawText(canvas, font, 1, 23, color, formatted_output[2])
-    graphics.DrawText(canvas, font, 1, 29, color, formatted_output[3])
+    graphics.DrawText(canvas, font, 1, 11, color, homewood_formatted[0])
+    graphics.DrawText(canvas, font, 1, 17, color, homewood_formatted[1])
+    graphics.DrawText(canvas, font, 1, 23, color, homewood_formatted[2])
 
     # Move scrolling text to the left
     pos -= 1
