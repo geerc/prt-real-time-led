@@ -33,9 +33,13 @@ with open('extracted_api_response.json') as f:
 formatted_output = []
 stop_names = []
 
+# filter api response by stop id
+fifth_ave_data = [bus for bus in data if bus['stpid'] == 8154]
+
+
 # Iterate through the list and save the formatted output to the list
 for item in data:
-    prdtm_last_5 = item['prdtm'][-5:]  # Get the last 5 characters of the 'prdtm' string
+    prdtm_last_5 = item['prdtm'][-5:]  # Get the last 5 characters (time) of the 'prdtm' string
     # get stop names and unique values to stop_names list
     if  len(formatted_output) == 0: # check if list is empty, if so append first stop name
         stop_names.append(f"{item['stpnm']}")
