@@ -1,27 +1,32 @@
 [
     {
-        "prdtm": "20240525 14:11",
-        "rt": "71D",
-        "stpnm": "FIFTH AVE + PENN AVE FS"
-    },
-    {
-        "prdtm": "20240525 14:11",
-        "rt": "28X",
-        "stpnm": "FIFTH AVE + PENN AVE FS"
-    },
-    {
-        "prdtm": "20240525 14:16",
+        "prdtm": "20240528 10:49",
         "rt": "P1",
-        "stpnm": "EAST BUSWAY + HOMEWOOD STATION C"
+        "stpnm": "EAST BUSWAY + HOMEWOOD STATION C",
+        "stpid": "8154"
     },
     {
-        "prdtm": "20240525 14:18",
-        "rt": "P68",
-        "stpnm": "EAST BUSWAY + HOMEWOOD STATION C"
+        "prdtm": "20240528 10:56",
+        "rt": "P3",
+        "stpnm": "EAST BUSWAY + HOMEWOOD STATION C",
+        "stpid": "8154"
     },
     {
-        "prdtm": "20240525 14:32",
+        "prdtm": "20240528 10:58",
         "rt": "71D",
-        "stpnm": "FIFTH AVE + PENN AVE FS"
+        "stpnm": "FIFTH AVE + PENN AVE FS",
+        "stpid": "20014"
+    },
+    {
+        "prdtm": "20240528 11:03",
+        "rt": "P1",
+        "stpnm": "EAST BUSWAY + HOMEWOOD STATION C",
+        "stpid": "8154"
+    },
+    {
+        "prdtm": "20240528 11:12",
+        "rt": "71D",
+        "stpnm": "FIFTH AVE + PENN AVE FS",
+        "stpid": "20014"
     }
 ]
