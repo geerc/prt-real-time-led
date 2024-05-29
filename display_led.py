@@ -42,7 +42,7 @@ for item in homewood_data:
     prdtm_last_5 = item['prdtm'][-5:]  # Get the last 5 characters (time) of the 'prdtm' string
     homewood_formatted.append(f"{item['rt']} {prdtm_last_5}")
 
-for item in fith_penn_data:
+for item in fifth_penn_data:
     prdtm_last_5 = item['prdtm'][-5:]  # Get the last 5 characters (time) of the 'prdtm' string
     fifth_penn_formatted.append(f"{item['rt']} {prdtm_last_5}")
 
@@ -82,16 +82,42 @@ def draw_fifth_penn(canvas, pos):
 # Intitalize poition of the text
 pos = canvas.width
 
+# List of screens with their respective scrolling positions
+screens = [(draw_homewood, pos), (draw_fifth_penn, pos)]
+
+# Current screen index
+current_screen = 0
+
+# Rotation interval in seconds
+rotation_interval = 10  # Change screen every 5 seconds
+
+# Time tracking
+last_switch_time = time.time()
+
 # Animation loop
 while True:
-    current_timie = time.time()
+    current_time = time.time()
+
+    # Check if it's time to switch the screen
+    if current_time - last_switch_time >= rotation_interval:
+        current_screen = (current_screen + 1) % len(screens)
+        last_switch_time = current_time
+
+    # Get the current screen function and its scrolling position
+    screen_function, pos = screens[current_screen]
+
+    # Draw the current screen with the scrolling text
+    canvas, scrolling_stop = screen_function(canvas, pos)
 
     # Move scrolling text to the left
     pos -= 1
 
     # Reset position if the text has moved completely off the left side
-    if pos + text_length < 0:
+    if pos + scrolling_stop < 0:
         pos = canvas.width
+
+    # Update the scrolling position in the screens list
+    screens[current_screen] = (screen_function, pos)
 
     # Swap the canvas to update the display
     canvas = matrix.SwapOnVSync(canvas)
