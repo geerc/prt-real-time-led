@@ -82,7 +82,9 @@ def draw_fifth_penn(canvas, pos):
 
     return canvas, scrolling_stop
 
-
+# Initial data fetch and processing
+data = fetch_data()
+homewood_data, fifth_penn_data, homewood_formatted, fifth_penn_formatted = process_data(data)
 
 # Intitalize poition of the text
 pos = canvas.width
@@ -99,9 +101,21 @@ rotation_interval = 10  # Change screen every 10 seconds
 # Time tracking
 last_switch_time = time.time()
 
+# Data refresh interval
+data_refresh_interval = 30  # Refresh data every 60 seconds
+last_refresh_time = time.time()
+
+
 # Animation loop
 while True:
     current_time = time.time()
+
+    # Check if it's time to refresh the data
+    if current_time - last_refresh_time >= data_refresh_interval:
+        data = fetch_data()
+        homewood_data, fifth_penn_data, homewood_formatted, fifth_penn_formatted = process_data(data)
+        screens = [(draw_homewood, pos, homewood_data, homewood_formatted), (draw_fifth_penn, pos, fifth_penn_data, fifth_penn_formatted)]
+        last_refresh_time = current_time
 
     # Check if it's time to switch the screen
     if current_time - last_switch_time >= rotation_interval:
