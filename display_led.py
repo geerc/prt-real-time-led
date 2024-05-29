@@ -96,8 +96,11 @@ homewood_data, fifth_penn_data, homewood_formatted, fifth_penn_formatted = proce
 # Intitalize poition of the text
 pos = canvas.width
 
-# List of screens with their respective scrolling positions
-screens = [(draw_homewood, pos), (draw_fifth_penn, pos)]
+# List of screens with their respective scrolling positions and data
+screens = [
+    (draw_homewood, pos, homewood_data, homewood_formatted),
+    (draw_fifth_penn, pos, fifth_penn_data, fifth_penn_formatted)
+]
 
 # Current screen index
 current_screen = 0
@@ -121,7 +124,10 @@ while True:
     if current_time - last_refresh_time >= data_refresh_interval:
         data = fetch_data()
         homewood_data, fifth_penn_data, homewood_formatted, fifth_penn_formatted = process_data(data)
-        screens = [(draw_homewood, pos, homewood_data, homewood_formatted), (draw_fifth_penn, pos, fifth_penn_data, fifth_penn_formatted)]
+        screens = [
+            (draw_homewood, pos, homewood_data, homewood_formatted),
+            (draw_fifth_penn, pos, fifth_penn_data, fifth_penn_formatted)
+        ]
         last_refresh_time = current_time
 
     # Check if it's time to switch the screen
@@ -130,10 +136,10 @@ while True:
         last_switch_time = current_time
 
     # Get the current screen function and its scrolling position
-    screen_function, pos = screens[current_screen]
+    screen_function, pos, screen_data, screen_formatted = screens[current_screen]
 
     # Draw the current screen with the scrolling text
-    canvas, scrolling_stop = screen_function(canvas, pos)
+    canvas, scrolling_stop = screen_function(canvas, pos, screen_data, screen_formatted)
 
     # Move scrolling text to the left
     pos -= 1
@@ -143,7 +149,7 @@ while True:
         pos = canvas.width
 
     # Update the scrolling position in the screens list
-    screens[current_screen] = (screen_function, pos)
+    screens[current_screen] = (screen_function, pos, screen_data, screen_formatted)
 
     # Swap the canvas to update the display
     canvas = matrix.SwapOnVSync(canvas)
