@@ -32,9 +32,16 @@ font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matr
 # define api endpoint url
 api_url = 'http://realtime.portauthority.org/bustime/api/v3/getpredictions'
 
+# Define parameters for api call
+params = {
+    'key': '7Cjew3Pd88mihr5aDsA2R3yyF',
+    'stpid': '20014,8154',
+    'format': 'json',
+    'rtpidatafeed':'Port Authority Bus'}
+
 # function to retrieve api response
 def fetch_data():
-    response = requests.get(api_url)
+    response = requests.get(api_url, params=params)
     if response.status_code == 200:
         # Parse the JSON data from the response
         data = response.json()
