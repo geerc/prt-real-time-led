@@ -31,7 +31,7 @@ with open('extracted_api_response.json') as f:
 
 # filter api response by stop id
 homewood_data = [bus for bus in data if bus['stpid'] == '8154']
-fith_penn_data = [bus for bus in data if bus['stpid'] == '20014']
+fifth_penn_data = [bus for bus in data if bus['stpid'] == '20014']
 print('Homewood data:  ', homewood_data[0]['stpnm'])
 # Lists to store the formatted output
 homewood_formatted = []
@@ -51,9 +51,33 @@ print('Fifth output: ', fifth_penn_formatted)
 
 # Save stop name to variable
 
+# function to draw homewood stop screen
+def draw_homewood(canvas, pos):
+    canvas.Clear()
 
-# Define the starting position
-# text_position = (1, 5)  # (x, y) coordinates
+    # Draw the scrolling text at the current position
+    scrolling_stop = graphics.DrawText(canvas, font, pos, 5, color, homewood_data[0]['stpnm'])
+
+    # Draw the static text
+    graphics.DrawText(canvas, font, 1, 11, color, homewood_formatted[0])
+    graphics.DrawText(canvas, font, 1, 17, color, homewood_formatted[1])
+    graphics.DrawText(canvas, font, 1, 23, color, homewood_formatted[2])
+
+    return canvas, scrolling_stop
+
+# function to draw fith and penn screen
+def draw_fifth_penn(canvas, pos):
+    canvas.Clear()
+
+    # Draw the scrolling text at the current position
+    scrolling_stop = graphics.DrawText(canvas, font, pos, 5, color, fifth_penn_data[0]['stpnm'])
+
+    # Draw the static text
+    graphics.DrawText(canvas, font, 1, 11, color, fifth_penn_formatted[0])
+    graphics.DrawText(canvas, font, 1, 17, color, fifth_penn_formatted[1])
+
+    return canvas, scrolling_stop
+
 
 # Clear the canvas
 canvas.Clear()
