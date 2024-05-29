@@ -79,23 +79,12 @@ def draw_fifth_penn(canvas, pos):
     return canvas, scrolling_stop
 
 
-# Clear the canvas
-canvas.Clear()
-
 # Intitalize poition of the text
 pos = canvas.width
 
 # Animation loop
 while True:
-    # Clear the canvas
-    canvas.Clear()
-
-    # Draw the scrolling text at the current position
-    text_length = graphics.DrawText(canvas, font, pos, 5, color, homewood_data[0]['stpnm'])
-    # Draw the static text
-    graphics.DrawText(canvas, font, 1, 11, color, homewood_formatted[0])
-    graphics.DrawText(canvas, font, 1, 17, color, homewood_formatted[1])
-    graphics.DrawText(canvas, font, 1, 23, color, homewood_formatted[2])
+    current_timie = time.time()
 
     # Move scrolling text to the left
     pos -= 1
