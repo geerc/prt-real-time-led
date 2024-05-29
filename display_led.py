@@ -56,8 +56,6 @@ def process_data(data):
 
     return homewood_data, fifth_penn_data, homewood_formatted, fifth_penn_formatted
 
-# Save stop name to variable
-
 # function to draw homewood stop screen
 def draw_homewood(canvas, pos):
     canvas.Clear()
@@ -65,10 +63,9 @@ def draw_homewood(canvas, pos):
     # Draw the scrolling text at the current position
     scrolling_stop = graphics.DrawText(canvas, font, pos, 5, color, homewood_data[0]['stpnm'])
 
-    # Draw the static text
-    graphics.DrawText(canvas, font, 1, 11, color, homewood_formatted[0])
-    graphics.DrawText(canvas, font, 1, 17, color, homewood_formatted[1])
-    graphics.DrawText(canvas, font, 1, 23, color, homewood_formatted[2])
+    # Draw the static text (bus arrival times) - up to 3 lines
+    for i in range(min(3, len(homewood_formatted))):  # Limit to the first 3 lines
+        graphics.DrawText(canvas, font, 1, 11 + 6 * i, color, homewood_formatted[i])
 
     return canvas, scrolling_stop
 
@@ -79,11 +76,12 @@ def draw_fifth_penn(canvas, pos):
     # Draw the scrolling text at the current position
     scrolling_stop = graphics.DrawText(canvas, font, pos, 5, color, fifth_penn_data[0]['stpnm'])
 
-    # Draw the static text
-    graphics.DrawText(canvas, font, 1, 11, color, fifth_penn_formatted[0])
-    graphics.DrawText(canvas, font, 1, 17, color, fifth_penn_formatted[1])
+    # Draw the static text (bus arrival times) - up to 3 lines
+    for i in range(min(3, len(fifth_penn_formatted))):  # Limit to the first 3 lines
+        graphics.DrawText(canvas, font, 1, 11 + 6 * i, color, fifth_penn_formatted[i])
 
     return canvas, scrolling_stop
+
 
 
 # Intitalize poition of the text
