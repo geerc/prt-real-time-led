@@ -2,6 +2,7 @@ from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
 # from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 import time
 import json
+import requests
 
 # Configuration for the matrix
 options = RGBMatrixOptions()
@@ -24,10 +25,25 @@ canvas = matrix.CreateFrameCanvas()
 font = graphics.Font()
 font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")  # Adjust the path to the font file if needed
 
-# Define the text
-# text = "Hello, World"
-with open('extracted_api_response.json') as f:
-    data = json.load(f)
+# Define static text
+# with open('extracted_api_response.json') as f:
+#     data = json.load(f)
+
+# define api endpoint url
+api_url = 'http://realtime.portauthority.org/bustime/api/v3/getpredictions'
+
+# function to retrieve api response
+def fetch_data():
+    response = requests.get(api_url)
+    if response.status_code == 200:
+        # Parse the JSON data from the response
+        data = response.json()
+    else:
+        # return an error message if the request failed
+        return f"Failed to retrieve data: {response.status_code}"
+
+    return [{'prdtm': item['prdtm'], 'rt': item['rt'], 'stpnm':item['stpnm'], 'stpid':item['stpid']} for item in data['bustime-response']['prd']]
+
 
 # filter api response by stop id
 homewood_data = [bus for bus in data if bus['stpid'] == '8154']
@@ -89,7 +105,7 @@ screens = [(draw_homewood, pos), (draw_fifth_penn, pos)]
 current_screen = 0
 
 # Rotation interval in seconds
-rotation_interval = 10  # Change screen every 5 seconds
+rotation_interval = 10  # Change screen every 10 seconds
 
 # Time tracking
 last_switch_time = time.time()
