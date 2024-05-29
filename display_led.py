@@ -44,26 +44,17 @@ def fetch_data():
 
     return [{'prdtm': item['prdtm'], 'rt': item['rt'], 'stpnm':item['stpnm'], 'stpid':item['stpid']} for item in data['bustime-response']['prd']]
 
+# filter by stop and format for dispalying
+def process_data(data):
+    # filter api response by stop id
+    homewood_data = [bus for bus in data if bus['stpid'] == '8154']
+    fifth_penn_data = [bus for bus in data if bus['stpid'] == '20014']
 
-# filter api response by stop id
-homewood_data = [bus for bus in data if bus['stpid'] == '8154']
-fifth_penn_data = [bus for bus in data if bus['stpid'] == '20014']
-print('Homewood data:  ', homewood_data[0]['stpnm'])
-# Lists to store the formatted output
-homewood_formatted = []
-fifth_penn_formatted = []
+    # format data into lists of 'rt, prdtm'
+    homewood_formatted = [f"{item['rt']} {item['prdtm'][-5:]}" for item in homewood_data]
+    fifth_penn_formatted = [f"{item['rt']} {item['prdtm'][-5:]}" for item in fifth_penn_data]
 
-# Iterate through the list and save the formatted output to the list
-for item in homewood_data:
-    prdtm_last_5 = item['prdtm'][-5:]  # Get the last 5 characters (time) of the 'prdtm' string
-    homewood_formatted.append(f"{item['rt']} {prdtm_last_5}")
-
-for item in fifth_penn_data:
-    prdtm_last_5 = item['prdtm'][-5:]  # Get the last 5 characters (time) of the 'prdtm' string
-    fifth_penn_formatted.append(f"{item['rt']} {prdtm_last_5}")
-
-print('Homewood output: ', homewood_formatted)
-print('Fifth output: ', fifth_penn_formatted)
+    return homewood_data, fifth_penn_data, homewood_formatted, fifth_penn_formatted
 
 # Save stop name to variable
 
