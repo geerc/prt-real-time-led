@@ -64,7 +64,7 @@ def process_data(data):
     return homewood_data, fifth_penn_data, homewood_formatted, fifth_penn_formatted
 
 # function to draw homewood stop screen
-def draw_homewood(canvas, pos):
+def draw_homewood(canvas, pos, homewood_data, homewood_formatted):
     canvas.Clear()
 
     # Draw the scrolling text at the current position
@@ -74,10 +74,10 @@ def draw_homewood(canvas, pos):
     for i in range(min(3, len(homewood_formatted))):  # Limit to the first 3 lines
         graphics.DrawText(canvas, font, 1, 11 + 6 * i, color, homewood_formatted[i])
 
-    return canvas, scrolling_stop
+    return canvas, scrolling_stop, homewood_data, homewood_formatted
 
 # function to draw fith and penn screen
-def draw_fifth_penn(canvas, pos):
+def draw_fifth_penn(canvas, pos, fifth_penn_data,fifth_penn_formatted):
     canvas.Clear()
 
     # Draw the scrolling text at the current position
@@ -87,7 +87,7 @@ def draw_fifth_penn(canvas, pos):
     for i in range(min(3, len(fifth_penn_formatted))):  # Limit to the first 3 lines
         graphics.DrawText(canvas, font, 1, 11 + 6 * i, color, fifth_penn_formatted[i])
 
-    return canvas, scrolling_stop
+    return canvas, scrolling_stop, fifth_penn_data, fifth_penn_formatted
 
 # Initial data fetch and processing
 data = fetch_data()
@@ -139,7 +139,7 @@ while True:
     screen_function, pos, screen_data, screen_formatted = screens[current_screen]
 
     # Draw the current screen with the scrolling text
-    canvas, scrolling_stop = screen_function(canvas, pos, screen_data, screen_formatted)
+    canvas, scrolling_stop, screen_data, screen_formatted = screen_function(canvas, pos, screen_data, screen_formatted)
 
     # Move scrolling text to the left
     pos -= 1
