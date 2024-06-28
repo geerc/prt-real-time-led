@@ -1,5 +1,5 @@
-from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
-# from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
+# from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
+from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 import time
 import json
 import requests
@@ -12,7 +12,7 @@ options.rows = 32
 options.cols = 64
 options.chain_length = 1
 options.parallel = 1
-# options.hardware_mapping = 'adafruit-hat'  # or 'adafruit-hat' or 'adafruit-hat-pwm' depending on your setup
+options.hardware_mapping = 'adafruit-hat'  # or 'adafruit-hat' or 'adafruit-hat-pwm' depending on your setup
 options.gpio_slowdown = 4
 
 # Create the matrix instance
@@ -26,8 +26,8 @@ canvas = matrix.CreateFrameCanvas()
 
 # Load font
 font = graphics.Font()
-font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")  # Adjust the path to the font file if needed
-# font.LoadFont("/home/christiangeer/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")
+# font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")  # Adjust the path to the font file if needed
+font.LoadFont("/home/christiangeer/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")
 
 # Define static text
 # with open('extracted_api_response.json') as f:
