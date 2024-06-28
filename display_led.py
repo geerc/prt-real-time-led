@@ -1,8 +1,10 @@
-# from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
-from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
+from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
+# from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 import time
 import json
 import requests
+import os
+from PIL import Image
 
 # Configuration for the matrix
 options = RGBMatrixOptions()
@@ -10,7 +12,7 @@ options.rows = 32
 options.cols = 64
 options.chain_length = 1
 options.parallel = 1
-options.hardware_mapping = 'adafruit-hat'  # or 'adafruit-hat' or 'adafruit-hat-pwm' depending on your setup
+# options.hardware_mapping = 'adafruit-hat'  # or 'adafruit-hat' or 'adafruit-hat-pwm' depending on your setup
 options.gpio_slowdown = 4
 
 # Create the matrix instance
@@ -24,8 +26,8 @@ canvas = matrix.CreateFrameCanvas()
 
 # Load font
 font = graphics.Font()
-#font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")  # Adjust the path to the font file if needed
-font.LoadFont("/home/christiangeer/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")
+font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")  # Adjust the path to the font file if needed
+# font.LoadFont("/home/christiangeer/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")
 
 # Define static text
 # with open('extracted_api_response.json') as f:
@@ -53,6 +55,21 @@ def fetch_data():
 
     return [{'prdtm': item['prdtm'], 'rt': item['rt'], 'stpnm':item['stpnm'], 'stpid':item['stpid']} for item in data['bustime-response']['prd']]
 
+# Load the image
+image_path = "/Users/christiangeer/led-board/prt-real-time-led/img/bus.jpg"
+if not os.path.isfile(image_path):
+    raise FileNotFoundError(f"Image file not found: {image_path}")
+image = Image.open(image_path)
+image = image.resize((canvas.width, canvas.height))
+image = image.convert('RGB')
+
+# Function to draw the image on the canvas
+def draw_image_on_canvas(canvas):
+    for x in range(canvas.width):
+        for y in range(canvas.height):
+            r, g, b = image.getpixel((x, y))
+            canvas.SetPixel(x, y, r, g, b)
+
 # filter by stop and format for dispalying
 def process_data(data):
     # filter api response by stop id
@@ -69,6 +86,9 @@ def process_data(data):
 def draw_homewood(canvas, pos, homewood_data, homewood_formatted):
     canvas.Clear()
 
+    # Draw the image
+    draw_image_on_canvas(canvas)
+
     # Draw the scrolling text at the current position
     scrolling_stop = graphics.DrawText(canvas, font, pos, 5, color, homewood_data[0]['stpnm'])
 
@@ -81,6 +101,9 @@ def draw_homewood(canvas, pos, homewood_data, homewood_formatted):
 # function to draw fith and penn screen
 def draw_fifth_penn(canvas, pos, fifth_penn_data,fifth_penn_formatted):
     canvas.Clear()
+
+    # Draw the image
+    draw_image_on_canvas(canvas)
 
     # Draw the scrolling text at the current position
     scrolling_stop = graphics.DrawText(canvas, font, pos, 5, color, fifth_penn_data[0]['stpnm'])
