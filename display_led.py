@@ -56,11 +56,11 @@ def fetch_data():
     return [{'prdtm': item['prdtm'], 'rt': item['rt'], 'stpnm':item['stpnm'], 'stpid':item['stpid']} for item in data['bustime-response']['prd']]
 
 # Load the image
-image_path = "/Users/christiangeer/led-board/prt-real-time-led/img/bus.jpg"
+image_path = "/Users/christiangeer/led-board/prt-real-time-led/img/bus.png"
 if not os.path.isfile(image_path):
     raise FileNotFoundError(f"Image file not found: {image_path}")
 image = Image.open(image_path)
-image = image.resize((canvas.width, canvas.height))
+image = image.resize((20, 20))
 image = image.convert('RGB')
 
 # Function to draw the image on the canvas
