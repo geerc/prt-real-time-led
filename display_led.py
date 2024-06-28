@@ -59,16 +59,19 @@ def fetch_data():
 image_path = "/Users/christiangeer/led-board/prt-real-time-led/img/bus.png"
 if not os.path.isfile(image_path):
     raise FileNotFoundError(f"Image file not found: {image_path}")
+
+desired_width = 25
+desired_height = 25
 image = Image.open(image_path)
-image = image.resize((20, 20))
+image = image.resize((desired_width, desired_height))
 image = image.convert('RGB')
 
 # Function to draw the image on the canvas
-def draw_image_on_canvas(canvas):
-    for x in range(canvas.width):
-        for y in range(canvas.height):
-            r, g, b = image.getpixel((x, y))
-            canvas.SetPixel(x, y, r, g, b)
+def draw_image_on_canvas(canvas, x, y):
+    for ix in range(image.width):
+        for iy in range(image.height):
+            r, g, b = image.getpixel((ix, iy))
+            canvas.SetPixel(x + ix, y + iy, r, g, b)
 
 # filter by stop and format for dispalying
 def process_data(data):
@@ -87,7 +90,7 @@ def draw_homewood(canvas, pos, homewood_data, homewood_formatted):
     canvas.Clear()
 
     # Draw the image
-    draw_image_on_canvas(canvas)
+    draw_image_on_canvas(canvas, 37, 5)
 
     # Draw the scrolling text at the current position
     scrolling_stop = graphics.DrawText(canvas, font, pos, 5, color, homewood_data[0]['stpnm'])
@@ -103,7 +106,7 @@ def draw_fifth_penn(canvas, pos, fifth_penn_data,fifth_penn_formatted):
     canvas.Clear()
 
     # Draw the image
-    draw_image_on_canvas(canvas)
+    draw_image_on_canvas(canvas, 37, 5)
 
     # Draw the scrolling text at the current position
     scrolling_stop = graphics.DrawText(canvas, font, pos, 5, color, fifth_penn_data[0]['stpnm'])
