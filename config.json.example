@@ -1,0 +1,19 @@
+{
+    "api_params": {
+        "key": API_KEY,
+        "format": "json",
+        "rtpidatafeed": "Port Authority Bus"
+    },
+    "stops": [
+        {"id": "8154"},
+        {"id": "20014"}
+    ],
+    "matrix_options": {
+        "rows": 32,
+        "cols": 64,
+        "chain_length": 1,
+        "parallel": 1,
+        "hardware_mapping": "adafruit-hat",
+        "gpio_slowdown": 4
+    }
+}
