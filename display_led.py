@@ -1,5 +1,5 @@
-# from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
-from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
+from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
+# from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 import time
 import json
 import requests
@@ -26,8 +26,8 @@ canvas = matrix.CreateFrameCanvas()
 
 # Load font
 font = graphics.Font()
-# font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")  # Adjust the path to the font file if needed
-font.LoadFont("/home/christiangeer/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")
+font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")  # Adjust the path to the font file if needed
+# font.LoadFont("/home/christiangeer/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")
 
 # Define static text
 # with open('extracted_api_response.json') as f:
@@ -73,15 +73,20 @@ def draw_image_on_canvas(canvas, x, y):
             r, g, b = image.getpixel((ix, iy))
             canvas.SetPixel(x + ix, y + iy, r, g, b)
 
-# filter by stop and format for dispalying
+# filter by stop and format for output
 def process_data(data):
+    def to_12hr_format(time_str):
+        # Convert the string time to 12-hour format
+        time_24hr = datetime.strptime(time_str, "%Y%m%d %H:%M")
+        return time_24hr.strftime("%I:%M %p")
+
     # filter api response by stop id
     homewood_data = [bus for bus in data if bus['stpid'] == '8154']
     fifth_penn_data = [bus for bus in data if bus['stpid'] == '20014']
 
     # format data into lists of 'rt, prdtm'
-    homewood_formatted = [f"{item['rt']} {item['prdtm'][-5:]}" for item in homewood_data]
-    fifth_penn_formatted = [f"{item['rt']} {item['prdtm'][-5:]}" for item in fifth_penn_data]
+    homewood_formatted = [f"{item['rt']} {to_12hr_format(item['prdtm'])}" for item in homewood_data]
+    fifth_penn_formatted = [f"{item['rt']} {to_12hr_format(item['prdtm'])}" for item in fifth_penn_data]
 
     return homewood_data, fifth_penn_data, homewood_formatted, fifth_penn_formatted
 
@@ -121,7 +126,7 @@ def draw_fifth_penn(canvas, pos, fifth_penn_data,fifth_penn_formatted):
 data = fetch_data()
 homewood_data, fifth_penn_data, homewood_formatted, fifth_penn_formatted = process_data(data)
 
-# Intitalize poition of the text
+# Initialize position of the text
 pos = canvas.width
 
 # List of screens with their respective scrolling positions and data
