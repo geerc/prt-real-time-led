@@ -1,19 +1,28 @@
-# from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
-from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
+from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
+# from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 import time
 import json
 import requests
 import os
 from PIL import Image
+from datetime import datetime, timedelta
+import pandas as pd
+
+# Load the config file
+with open('config.json') as f:
+    config = json.load(f)
+
+# Extract matrix options from the config file
+matrix_config = config['matrix_options']
 
 # Configuration for the matrix
 options = RGBMatrixOptions()
-options.rows = 32
-options.cols = 64
-options.chain_length = 1
-options.parallel = 1
-options.hardware_mapping = 'adafruit-hat'  # or 'adafruit-hat' or 'adafruit-hat-pwm' depending on your setup
-options.gpio_slowdown = 4
+options.rows = matrix_config.get('rows', 32)  # Default to 32 if not specified
+options.cols = matrix_config.get('cols', 64)  # Default to 64 if not specified
+options.chain_length = matrix_config.get('chain_length', 1)
+options.parallel = matrix_config.get('parallel', 1)
+options.hardware_mapping = matrix_config.get('hardware_mapping', 'adafruit-hat')
+options.gpio_slowdown = matrix_config.get('gpio_slowdown', 4)
 
 # Create the matrix instance
 matrix = RGBMatrix(options=options)
@@ -26,12 +35,12 @@ canvas = matrix.CreateFrameCanvas()
 
 # Load font
 font = graphics.Font()
-# font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")  # Adjust the path to the font file if needed
-font.LoadFont("/home/christiangeer/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")
+font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")  # Adjust the path to the font file if needed
+# font.LoadFont("/home/christiangeer/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")
 
-# Define static text
-# with open('extracted_api_response.json') as f:
-#     data = json.load(f)
+# Define colors
+predicted_color = graphics.Color(0, 255, 0)  # Green for predicted times
+scheduled_color = graphics.Color(255, 255, 255)  # White for scheduled times
 
 # define api endpoint url
 api_url = 'http://realtime.portauthority.org/bustime/api/v3/getpredictions'
@@ -45,7 +54,18 @@ params = {
 
 # function to retrieve api response
 def fetch_data():
-    response = requests.get(api_url, params=params)
+    # Load API parameters from the config file
+    api_params = stops_config['api_params']
+
+    # Build the 'stpid' parameter by joining stop IDs from the config
+    stpid = ','.join([stop['id'] for stop in stops_config['stops']])
+
+    # Add the dynamic 'stpid' parameter to the api_params dictionary
+    api_params['stpid'] = stpid
+
+    # Send the GET request with the dynamically set parameters
+    response = requests.get(api_url, params=api_params)
+
     if response.status_code == 200:
         # Parse the JSON data from the response
         data = response.json()
@@ -78,61 +98,62 @@ def process_data(data):
     def to_12hr_format(time_str):
         # Convert the string time to 12-hour format
         time_24hr = datetime.strptime(time_str, "%Y%m%d %H:%M")
-        return time_24hr.strftime("%I:%M %p")
+        return time_24hr.strftime("%I:%M")
 
-    # filter api response by stop id
-    homewood_data = [bus for bus in data if bus['stpid'] == '8154']
-    fifth_penn_data = [bus for bus in data if bus['stpid'] == '20014']
+    def is_future_time(time_str):
+        # Convert the time string to datetime object
+        time_24hr = datetime.strptime(time_str, "%Y%m%d %H:%M")
+        # Check if the time is at least 10 minutes in the future compared to current time
+        return time_24hr > datetime.now() + timedelta(minutes=10)
 
-    # format data into lists of 'rt, prdtm'
-    homewood_formatted = [f"{item['rt']} {to_12hr_format(item['prdtm'])}" for item in homewood_data]
-    fifth_penn_formatted = [f"{item['rt']} {to_12hr_format(item['prdtm'])}" for item in fifth_penn_data]
+    # Dictionary to store the formatted data by stop name
+    formatted_data = {}
 
-    return homewood_data, fifth_penn_data, homewood_formatted, fifth_penn_formatted
+    # Iterate through each stop from the configuration file
+    for stop in config['stops']:
+        # Filter the bus data for this stop based on stop ID and ensure it's 10 minutes or more in the future
+        stop_data = [bus for bus in data if bus['stpid'] == stop['id'] and is_future_time(bus['prdtm'])]
 
-# function to draw homewood stop screen
-def draw_homewood(canvas, pos, homewood_data, homewood_formatted):
+        # If there is data for this stop, proceed
+        if stop_data:
+            # Get the stop name from the first bus data (all buses for this stop have the same stop name)
+            stop_name = stop_data[0]['stpnm']
+
+            # Format each bus entry as "route_number arrival_time", and add to the dictionary
+            formatted_data[stop_name] = [f"{item['rt']} {to_12hr_format(item['prdtm'])}" for item in stop_data]
+
+    # Return the formatted data where the key is the stop name and the value is a list of buses
+    return formatted_data
+
+
+# Function to draw a stop's data on the LED matrix
+def draw_stop(canvas, pos, stop_name, stop_formatted, stop_data):
     canvas.Clear()
 
     # Draw the image
     draw_image_on_canvas(canvas, 37, 5)
 
     # Draw the scrolling text at the current position
-    scrolling_stop = graphics.DrawText(canvas, font, pos, 5, color, homewood_data[0]['stpnm'])
+    scrolling_stop = graphics.DrawText(canvas, font, pos, 5, color, stop_name)
 
     # Draw the static text (bus arrival times) - up to 3 lines
-    for i in range(min(3, len(homewood_formatted))):  # Limit to the first 3 lines
-        graphics.DrawText(canvas, font, 1, 11 + 6 * i, color, homewood_formatted[i])
+    for i in range(min(3, len(stop_formatted))):  # Limit to the first 3 lines
+        graphics.DrawText(canvas, font, 1, 11 + 6 * i, color, stop_formatted[i])
 
-    return canvas, scrolling_stop, homewood_data, homewood_formatted
+    return canvas, scrolling_stop, stop_formatted
 
-# function to draw fith and penn screen
-def draw_fifth_penn(canvas, pos, fifth_penn_data,fifth_penn_formatted):
-    canvas.Clear()
-
-    # Draw the image
-    draw_image_on_canvas(canvas, 37, 5)
-
-    # Draw the scrolling text at the current position
-    scrolling_stop = graphics.DrawText(canvas, font, pos, 5, color, fifth_penn_data[0]['stpnm'])
-
-    # Draw the static text (bus arrival times) - up to 3 lines
-    for i in range(min(3, len(fifth_penn_formatted))):  # Limit to the first 3 lines
-        graphics.DrawText(canvas, font, 1, 11 + 6 * i, color, fifth_penn_formatted[i])
-
-    return canvas, scrolling_stop, fifth_penn_data, fifth_penn_formatted
 
 # Initial data fetch and processing
 data = fetch_data()
-homewood_data, fifth_penn_data, homewood_formatted, fifth_penn_formatted = process_data(data)
+formatted_data = process_data(data)
 
 # Initialize position of the text
 pos = canvas.width
 
-# List of screens with their respective scrolling positions and data
+# Create a list of screens dynamically based on the stops in the config file
 screens = [
-    (draw_homewood, pos, homewood_data, homewood_formatted),
-    (draw_fifth_penn, pos, fifth_penn_data, fifth_penn_formatted)
+    (stop['name'], pos, formatted_data[stop['name']])
+    for stop in config['stops']
 ]
 
 # Current screen index
@@ -145,9 +166,8 @@ rotation_interval = 10  # Change screen every 10 seconds
 last_switch_time = time.time()
 
 # Data refresh interval
-data_refresh_interval = 30  # Refresh data every 60 seconds
+data_refresh_interval = 30  # Refresh data every 30 seconds
 last_refresh_time = time.time()
-
 
 # Animation loop
 while True:
@@ -156,10 +176,11 @@ while True:
     # Check if it's time to refresh the data
     if current_time - last_refresh_time >= data_refresh_interval:
         data = fetch_data()
-        homewood_data, fifth_penn_data, homewood_formatted, fifth_penn_formatted = process_data(data)
+        formatted_data = process_data(data)
+        # Update the screens list with the new data
         screens = [
-            (draw_homewood, pos, homewood_data, homewood_formatted),
-            (draw_fifth_penn, pos, fifth_penn_data, fifth_penn_formatted)
+            (stop['name'], pos, formatted_data[stop['name']])
+            for stop in config['stops']
         ]
         last_refresh_time = current_time
 
@@ -168,11 +189,11 @@ while True:
         current_screen = (current_screen + 1) % len(screens)
         last_switch_time = current_time
 
-    # Get the current screen function and its scrolling position
-    screen_function, pos, screen_data, screen_formatted = screens[current_screen]
+    # Get the current stop's data
+    stop_name, pos, stop_formatted = screens[current_screen]
 
-    # Draw the current screen with the scrolling text
-    canvas, scrolling_stop, screen_data, screen_formatted = screen_function(canvas, pos, screen_data, screen_formatted)
+    # Draw the current stop's screen with the scrolling text
+    canvas, scrolling_stop, stop_formatted = draw_stop(canvas, pos, stop_name, stop_formatted, stop_formatted)
 
     # Move scrolling text to the left
     pos -= 1
@@ -181,8 +202,8 @@ while True:
     if pos + scrolling_stop < 0:
         pos = canvas.width
 
-    # Update the scrolling position in the screens list
-    screens[current_screen] = (screen_function, pos, screen_data, screen_formatted)
+    # Draw the current stop's screen with the scrolling text
+    canvas, scrolling_stop, stop_formatted = draw_stop(canvas, pos, stop_name, stop_formatted, stop_formatted)
 
     # Swap the canvas to update the display
     canvas = matrix.SwapOnVSync(canvas)
@@ -193,7 +214,7 @@ while True:
 # Swap buffers to display the text
 matrix.SwapOnVSync(canvas)
 
-# Keep scirpt running until interupted or times out at 100 seconds
+# Keep script running until interrupted or times out at 100 seconds
 try:
     print("Press CTRL-C to stop.")
     while True:
