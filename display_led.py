@@ -1,4 +1,5 @@
 from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
+# from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 import time
 import json
 import requests
@@ -33,8 +34,8 @@ canvas = matrix.CreateFrameCanvas()
 
 # Load font
 font = graphics.Font()
-font.LoadFont(
-    "/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")  # Adjust the path to the font file if needed
+# font.LoadFont("/home/christiangeer/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")
+font.LoadFont("/Users/christiangeer/led-board/prt-real-time-led/rpi-rgb-led-matrix/fonts/4x6.bdf")  # Adjust the path to the font file if needed
 
 # Define colors
 predicted_color = graphics.Color(0, 255, 0)  # Green for predicted times
