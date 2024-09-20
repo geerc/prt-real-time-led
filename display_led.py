@@ -1,5 +1,5 @@
-from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
-# from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
+# from RGBMatrixEmulator import RGBMatrix, RGBMatrixOptions, graphics
+from rgbmatrix import RGBMatrix, RGBMatrixOptions, graphics
 import time
 import json
 import requests
